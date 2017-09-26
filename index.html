@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>Yandex Translator API</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 30px 0;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        background-color: #ccc;
+      }
+
+      .main {
+        margin: 0 auto;
+        padding: 30px 20px 50px;
+        width: 1200px;
+        border-radius: 10px;
+        background-color: #fff;
+      }
+
+      img {
+        margin-right: 30px;
+        float: left;
+      }
+
+      img:after {
+        content: '';
+        display: block;
+        width: 100%;
+        clear: both;
+      }
+    </style>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+    <div class="main">
+      <h1>Пример работы переводчика на странице.</h1>
+      <h2>Просто выделите мышкой любой участок текста на странице</h2>
+      
+      <img src="ezhik2.jpg" alt="ёжик">
+      
+      <p>Ёжик — один из самых известных лесных жителей. Любимое место обитания ежа – лиственные и смешанные леса. Болотистых местностей и исключительно хвойных массивов этот лесной житель избегает.</p>
+      
+      <p>Всё тело ежа покрыто иголками (кроме брюшка, мохнатой мордочки и пушистых лапок). Глаза у колючего – словно две черные блестящие бусинки. Видит он плохо. Нос у ежа всегда влажный.</p>
+      
+      <p>Рацион «колючего и сердитого жителя», как его нередко называют – насекомые, ужи, жабы, лягушки, улитки, мыши, змейки, земляника, малина.</p>
+      
+      <p>Жилище ежа – гнездо или укрытие, сооружённое из листьев и веток у корней какого-либо дерева. Далеко от своего пристанища ёж не отходит. В дневное время суток в своём укрытии он находится постоянно. А ночью бродит по лесу, добывая себе пропитание.</p>
+      
+      <p>Набрав вес за лето, досыта отъевшись, всю зиму ёж спит в своём гнезде. Активную деятельность он начинает лишь при температуре воздуха свыше пятнадцати градусов.</p>
+      
+      <p>Поют ли ёжики? Да. По весне. Песня самца небогата красками. Это всего лишь монотонное пыхтение. Ёжик всегда «при параде». Никогда не снимает свой «колючий пиджак».</p>
+      
+      <p>Перевод осуществляется благодаря API приложения <a href="//translate.yandex.ru/">Яндекс.Переводчик</a></p>
+
+      <p>Статья повзаимствована с сайта  <a href="//detskiychas.ru/obo_vsyom/rasskazy_o_prirode/rasskaz_pro_ezha/">Детский Час</a></p>
+    </div>
+
+    <script>
+      const barmaley = atob('P2tleT10cm5zbC4xLjEuMjAxNzA5MjRUMjIwOTU4Wi5jNjhiMTI2MTg1ZjY0NjM2LjBiNTM2MDljYjRiM2ZlZmZkY2Q5YjY4YWIyNzM4NGZhMWMwNTJjY2U=');
+      const requestParams = {
+        url:      'https://translate.yandex.net/api/v1.5/tr.json/translate',
+        // key:      '?key=trnsl.1.1.20170924T220958Z.c68b126185f64636.0b53609cb4b3feffdcd9b68ab27384fa1c052cce',
+        key:      barmaley,
+        text:     '&text=train hard or die',
+        lang:     '&lang=ru-en',
+        format:   '&format=plain',
+        options:  '&options=1'
+        // callback: '&callback=showText'
+      };
+
+
+
+      function getSelectionText() {
+        var txt = '';
+        if (txt = window.getSelection) { // Не IE, используем метод getSelection
+          txt = window.getSelection().toString();
+        } else { // IE, используем объект selection
+          txt = document.selection.createRange().text;
+        }
+        return txt;
+      }
+
+      window.addEventListener('mouseup', initTranslate);
+
+      function initTranslate(event) {
+        let text = getSelectionText();
+        if (text) {
+          makeRequest(text);
+        }
+      }
+
+      function makeRequest(text) {
+        requestParams.text = '&text=' + text;
+
+        const requestURL = Object.keys(requestParams)
+                          .map(key => requestParams[key])
+                          .reduce((result, current) => result += current, '');
+
+        const request = fetch(requestURL);
+        request.then(res => res.json())
+               .then(res => res.text)
+               .then(res => alert(res[0]))
+               .catch(console.error);
+      }
+    </script>
+  </body>
+</html>
